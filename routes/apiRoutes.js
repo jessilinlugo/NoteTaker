@@ -1,39 +1,44 @@
-const express = require("express");
+const router = require("express").Router();
 const fs = require("fs");
 const uuid = require("uuid");
 
-module.exports = (app) => {
-    app.get("/api/notes", (req, res) => {
-        fs.readFile("./db/db.json", "utf8", (err, data) => {
-            if (err) throw err;
-            res.json(JSON.parse(data))
-        })
-    })
-};
+//this loads the notes
 
-app.post("/api/notes", (req, res) => {
+    router.get("/notes", (req, res) => {
+        fs.readFile("public/db/db.json", (err, data) => {
+            if (err) throw err;
+            return res.JSON(data);
+        })
+    });
+
+
+//this creates new notes
+router.post("/notes", (req, res) => {
     let newNote = req.body
     newNote.id = uuid.v4()
-    fs.readFile("./db/db.json", "utf8", (err, data) => {
+    fs.readFile("public/db/db.json", (err, data) => {
         if (err) throw err;
         let fileJson = JSON.parse(data);
-        fileJson.push(newNote)
-        fs.writeFile("./db/db.json", JSON.stringify(fileJson), (err) => {
+        fileJson.push(newNote);
+        fs.writeFile("public/db/db.json", JSON.stringify(fileJson), (err) => {
             if (err) throw err;
-            res.status(200).send(true)
+            res.status(200).send(true);
         })
     })
 });
 
-app.delete("/api/notes/:id", (req, res) => {
-    const noteId = req.params.id;
-    fs.readFile("./db/db.json", "utf8", (err, data) =>  {
-        let fileJson = JSON.parse(data);
-        if (err) throw err;
-        fileJson.forEach((element) => {
-            if (element.id === noteId) {
-                fileJson.splice(element, 1)
-            }
-        })
-    })
-});
+// //this deletes the selected note
+// router.delete("/notes/:id", (req, res) => {
+//     let noteId = req.params.id;
+//     fs.readFile("public/db/db.json", (err, data) =>  {
+//         // let fileJson = JSON.parse(data);
+//         if (err) throw err;
+//         fileJson.forEach((element) => {
+//             if (element.id === noteId) {
+//                 fileJson.splice(...element, 1)
+//             }
+//         })
+//     })
+// });
+
+module.exports = router;
