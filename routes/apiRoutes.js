@@ -5,9 +5,11 @@ const uuid = require("uuid");
 //this loads the notes
 
     router.get("/notes", (req, res) => {
-        fs.readFile("public/db/db.json", (err, data) => {
+        console.log("here's a thing");
+        fs.readFile("./public/db/db.json", "utf-8", (err, data) => {
+            console.log(data);
             if (err) throw err;
-            return res.JSON(data);
+            return res.json(data);
         })
     });
 
@@ -16,11 +18,11 @@ const uuid = require("uuid");
 router.post("/notes", (req, res) => {
     let newNote = req.body
     newNote.id = uuid.v4()
-    fs.readFile("public/db/db.json", (err, data) => {
+    fs.readFile("./public/db/db.json", "utf-8", (err, data) => {
         if (err) throw err;
         let fileJson = JSON.parse(data);
         fileJson.push(newNote);
-        fs.writeFile("public/db/db.json", JSON.stringify(fileJson), (err) => {
+        fs.writeFile("./public/db/db.json", JSON.stringify(fileJson), (err) => {
             if (err) throw err;
             res.status(200).send(true);
         })

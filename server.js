@@ -17,8 +17,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
 //home route
-app.use("/", htmlRoutes);
 app.use("/api", apiRoutes);
+app.use("/", htmlRoutes);
+
 
 
 app.listen(PORT, () => console.log(`App listening on PORT ${PORT}`));
